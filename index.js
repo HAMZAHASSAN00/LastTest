@@ -15,7 +15,7 @@ io.on('connection', (socket) => {
     // Forward the request to the corresponding tanker
     const tankerId = data.tankerId;
     console.log(tankerId);
-    io.emit('tankerRequest', data);
+    io.to(tankerId).emit('tankerRequest', data);
   });
 
   // Handle tanker response
