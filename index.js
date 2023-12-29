@@ -64,6 +64,7 @@ if (cluster.isMaster) {
 
   io.on('connection', (socket) => {
     console.log('A user connected');
+    console.log(`worker ${process.pid} started on port ${PORT}`);
     // Handle customer request
     socket.on('customerRequest', (data) => {
       console.log('Customer request received:', data);
