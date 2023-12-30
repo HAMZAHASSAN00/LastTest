@@ -22,9 +22,10 @@ function getEmailBySocketId(socketId) {
 }
 function deleteEntryByEmail(email) {
     if (CustomerEmailToSocketIdMap.hasOwnProperty(email)) {
-      delete emailToSocketIdMap[email];
+      delete CustomerEmailToSocketIdMap[email];
       console.log(`Deleted entry for Customer email: ${email}`);
     } else if (TankerEmailToSocketIdMap.hasOwnProperty(email)){
+      delete TankerEmailToSocketIdMap[email];
       console.log(`Deleted entry for Tanker email: ${email}`);
     }
   }
