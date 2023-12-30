@@ -8,6 +8,27 @@ const io = socketIO(server);
 const CustomerEmailToSocketIdMap = {};
 const TankerEmailToSocketIdMap = {};
 
+function getEmailBySocketId(socketId) {
+    for (const [email, id] of Object.entries(CustomerEmailToSocketIdMap)) {
+      if (id === socketId) {
+        return email;
+      }
+    }
+    for (const [email, id] of Object.entries(TankerEmailToSocketIdMap)) {
+        if (id === socketId) {
+          return email;
+        }
+      }
+}
+function deleteEntryByEmail(email) {
+    if (CustomerEmailToSocketIdMap.hasOwnProperty(email)) {
+      delete emailToSocketIdMap[email];
+      console.log(`Deleted entry for Customer email: ${email}`);
+    } else if (TankerEmailToSocketIdMap.hasOwnProperty(email)){
+      console.log(`Deleted entry for Tanker email: ${email}`);
+    }
+  }
+
 io.on('connection', (socket) => {
   console.log('A user connected');
 
@@ -61,6 +82,9 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     console.log('A user disconnected');
+    const targetEmail = getEmailBySocketId(socket.id);
+    deleteEntryByEmail(targetEmail);
+    io.emit('displayTankers', TankerEmailToSocketIdMap);
   });
 });
 const PORT = process.env.PORT || 3000;
