@@ -5,25 +5,17 @@ const socketIO = require('socket.io');
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
+
 const CustomerEmailToSocketIdMap = {};
 const TankerEmailToSocketIdMap = {};
 
-function getEmailBySocketId(socketId) {
-    for (const [email, id] of Object.entries(CustomerEmailToSocketIdMap)) {
-      if (id === socketId) {
-        return email;
-      }
-    }
-    for (const [email, id] of Object.entries(TankerEmailToSocketIdMap)) {
-        if (id === socketId) {
-          return email;
-        }
-      }
-}
+const SocketIdToTankerEmailMap = {};
+
+
 function deleteEntryByEmail(email) {
     if (CustomerEmailToSocketIdMap.hasOwnProperty(email)) {
       delete CustomerEmailToSocketIdMap[email];
-      console.log(`Deleted entry for Customer email: ${email}`);
+      console.log(`no need to delete Customer email: ${email}`);
     } else if (TankerEmailToSocketIdMap.hasOwnProperty(email)){
       delete TankerEmailToSocketIdMap[email];
       console.log(`Deleted entry for Tanker email: ${email}`);
@@ -42,6 +34,7 @@ io.on('connection', (socket) => {
     if(user_type=="Tanker"){
         //save the socket.id of that TankerEmail
         TankerEmailToSocketIdMap[user_email] = socket.id;
+        SocketIdToTankerEmailMap[socket.id]= user_email;
         io.emit('displayTankers', TankerEmailToSocketIdMap);
         console.log('Tanker email socket.id: ',TankerEmailToSocketIdMap[user_email]);
     }
@@ -83,7 +76,7 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     console.log('A user disconnected');
-    const targetEmail = getEmailBySocketId(socket.id);
+    const targetEmail = SocketIdToTankerEmailMap[socket.id];
     deleteEntryByEmail(targetEmail);
     io.emit('displayTankers', TankerEmailToSocketIdMap);
   });
