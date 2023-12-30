@@ -33,8 +33,8 @@ io.on('connection', (socket) => {
   socket.on('requestDisplayTankers', (data) => {
     console.log('DisplayingTankers:');
     // Forward the activeTanker to the customer
-    //io.to(`${socket.id}`).emit('displayTankers', TankerEmailToSocketIdMap);
-    io.emit('displayTankers', TankerEmailToSocketIdMap);
+    io.to(`${socket.id}`).emit('displayTankers', TankerEmailToSocketIdMap);
+    //io.emit('displayTankers', TankerEmailToSocketIdMap);
     
   });
 
