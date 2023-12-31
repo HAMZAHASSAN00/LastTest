@@ -60,7 +60,7 @@ io.on('connection', (socket) => {
     const tanker_email = data.tankerEmail;
     console.log(tanker_email);
     
-    io.to(`${TankerEmailToSocketIdMap[tanker_email]}`).emit('tankerRequest', data);
+    io.to(`${TankerEmailToSocketIdMap[tanker_email]}`).emit('customerRequestedYou', data);
     
   });
 
@@ -71,7 +71,7 @@ io.on('connection', (socket) => {
     // Forward the response to the corresponding customer
     const customer_email = data.customerEmail;
     console.log(customer_email);
-    io.to(CustomerEmailToSocketIdMap[customer_email]).emit('customerResponse', data);
+    io.to(CustomerEmailToSocketIdMap[customer_email]).emit('tankerResponseToYou', data);
   });
 
   socket.on('disconnect', () => {
